@@ -1,0 +1,22 @@
+#
+# Build binary
+#
+FROM registry.redhat.io/ubi9/go-toolset as builder
+
+COPY ./go.* ./main.go .
+
+RUN go build
+
+#
+# Build runtime container
+#
+FROM registry.access.redhat.com/ubi9/ubi-minimal
+
+COPY --from=builder /opt/app-root/src/web-service-gin /usr/local/bin/
+
+RUN useradd --uid 1000 --no-create-home --gid root web
+
+USER 1000
+EXPOSE 8080
+
+ENTRYPOINT [ "web-service-gin" ]

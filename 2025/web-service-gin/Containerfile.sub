@@ -1,0 +1,9 @@
+FROM registry.redhat.io/ubi9/go-toolset
+
+COPY ./go.* ./main.go .
+
+RUN go build
+
+EXPOSE 8080
+
+ENTRYPOINT [ "/opt/app-root/src/web-service-gin" ]
